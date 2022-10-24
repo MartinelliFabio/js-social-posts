@@ -132,7 +132,6 @@ const bottoneMiPiace = document.querySelectorAll('.likes__cta');
 function miPiace() {    
     const a = document.querySelector('.js-like-button');
     for(let i = 0; i < bottoneMiPiace.length; i++) {
-        let IDLike = bottoneMiPiace[i].getAttribute('data-postid');
         // Prendo l'ancora e verifico se è stato cliccato
         if(!likedPost.includes(posts[i].id)) {
             a.classList.add('text-primary');
