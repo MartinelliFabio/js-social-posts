@@ -60,7 +60,7 @@ const posts = [
         "media": "https://unsplash.it/600/400?image=24",
         "author": {
             "name": "Luca Formicola",
-            "image": null
+            "image": "https://unsplash.it/300/300?image=20"
         },
         "likes": 56,
         "created": "2021-04-03"
@@ -80,6 +80,9 @@ const posts = [
 
 // Prendo il div#container dal DOM
 const containerHTML = document.getElementById('container');
+
+// Creo un'array per contenere tutti i post in cui è stato cliccato il bottone "Mi Piace"
+let likedPost = [];
 
 createPost(); // Richiamo la funzione per la creazione dei Post
 
@@ -109,7 +112,7 @@ function createPost(){
             <div class="post__footer">
                 <div class="likes js-likes">
                     <div class="likes__cta">
-                        <a class="like-button  js-like-button" href="#" data-postid="${element.id}">
+                        <a class="like-button  js-like-button" href="#nogo" data-postid="${element.id}">
                             <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                             <span class="like-button__label">Mi Piace</span>
                         </a>
@@ -123,4 +126,56 @@ function createPost(){
 
         containerHTML.append(post); // Appendo il post al container
     });
+}
+
+const bottoneMiPiace = document.querySelectorAll('.likes__cta');
+function miPiace() {    
+    const a = document.querySelector('.js-like-button');
+    for(let i = 0; i < bottoneMiPiace.length; i++) {
+        let IDLike = bottoneMiPiace[i].getAttribute('data-postid');
+        // Prendo l'ancora e verifico se è stato cliccato
+        if(!likedPost.includes(posts[i].id)) {
+            a.classList.add('text-primary');
+            posts[i].likes++;
+            contatoreLike(true, posts[i].id);
+            console.log(likedPost);
+        } else {
+            a.classList.remove('text-primary');
+            posts[i].likes--;
+            contatoreLike(false, posts[i].id);
+            console.log(likedPost);
+        }
+    }
+}
+
+
+function miPiaceOver() {
+    for(let i = 0; i < posts.length; i++) {
+        if(likedPost.includes(posts[i].id)) {
+            document.querySelectorAll('.like-button__label').innerHTML = ' Non Mi Piace Più';
+        }
+    }
+}
+
+function miPiaceLeave() {
+    document.querySelector('.like-button__label').innerHTML = ' Mi Piace';
+}
+
+for(let element of bottoneMiPiace) {
+    element.addEventListener('click', miPiace);
+    element.addEventListener('mouseover', miPiaceOver);
+    element.addEventListener('mouseleave', miPiaceLeave);
+}
+
+
+function contatoreLike(bool, id) {
+    const counter = document.getElementById(`like-counter-${id}`);
+    if(bool) {
+        counter.innerHTML++;
+        likedPost.push(id);
+    } else {
+        counter.innerHTML--;
+        const index = likedPost.indexOf(id);
+        likedPost.splice(index, 1);
+    }
 }
